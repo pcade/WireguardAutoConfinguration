@@ -12,3 +12,7 @@ from modules.config_manager import *
 #IP_ADDRESS = IncrementIp(GetLastAllowedIp('wg0.conf'))
 
 #AppendClientToConf(WG0, 'a')
+
+
+if __name__ == "__main__":
+    main()

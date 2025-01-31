@@ -1,14 +1,30 @@
-# WireguardAutoConfinguration
-Для успешной работы необходимо:
-Файл секретов .env в корне проекта с содержимым
+markdown
 
+# WireguardAutoConfiguration
+
+## Описание
+WireguardAutoConfiguration — это инструмент для автоматической настройки клиентской конфигурации [WireGuard VPN](https://www.wireguard.com/).
+
+## Требования
+>Убедитесь, что у вас развернут сервер WireGuard. Для поднятия сервера вы можете воспользоваться статьей [LinuxBabe: Установка WireGuard VPN на Ubuntu](https://www.linuxbabe.com/ubuntu/wireguard-vpn-server-ubuntu).
+
+## Установка и использование
+### Установка
+*Для успешной работы необходимо выполнить следующие шаги:*
+
+1. Создайте файл секретов `.env` в корне проекта с содержимым:  
+```
 PublicKey=[Ваш паблик ключ сервера]
-Endpoint=[Адресс вашего сервера]
-DNS=[Адресс вашего ДНС сервера]
-AllowedIPs=[разрешенные адресса например - 0.0.0.0/0]
-PersistentKeepalive=[индивидуальный параметр, например 22]
+Endpoint=[Адрес вашего сервера]
+DNS=[Адрес вашего ДНС сервера]
+AllowedIPs=[разрешенные адреса, например - 0.0.0.0/0]
+PersistentKeepalive=[индивидуальный параметр, например 22
+Code
+```
 
+1. Установите библиотеку `python-dotenv` для считывания переменных из файла `.env`:
 
-Установленный pip install python-dotenv для считывания переменных из файла .env
-
-Развёрнутый сервер Wireguard. Для поднятия использовалась статья https://www.linuxbabe.com/ubuntu/wireguard-vpn-server-ubuntu
+```bash
+pip install python-dotenv
+```
+### Использование
