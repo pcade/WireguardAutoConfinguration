@@ -2,17 +2,31 @@ import subprocess
 from utils.utils import *
 from modules.key_manager import *
 #from modules.config_manager import *
-#from modules.ip_manager import *
+from modules.ip_manager import *
 
 CLIENT_NAME = 'test'
 
-PRIVATE_KEY = create_private_keys(CLIENT_NAME).decode().strip()
-PUBLIC_KEY = create_pub_keys(PRIVATE_KEY, CLIENT_NAME).decode().strip()
+
+from modules.key_manager import *
+private_key = create_private_keys(CLIENT_NAME).decode().strip()
+public_key = create_pub_keys(private_key, CLIENT_NAME).decode().strip()
+
+
+from modules.ip_manager import *
+ip_address = increment_ip(get_last_allowed_ip(WG0+CONF))
+
+
+
 from modules.config_manager import *
+append_client_to_conf(CLIENT_NAME, 'x', ip_address, private_key)
+append_client_to_conf(WG0, 'a', ip_address, public_key)
 #IP_ADDRESS = IncrementIp(GetLastAllowedIp('wg0.conf'))
 
 #AppendClientToConf(WG0, 'a')
 
 
-if __name__ == "__main__":
-    main()
+#def main():
+#    pass
+#
+#if __name__ == "__main__":
+#    main()

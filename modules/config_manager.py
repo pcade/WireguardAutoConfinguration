@@ -1,4 +1,3 @@
-from main import IP_ADDRESS, PRIVATE_KEY, PUBLIC_KEY
 from utils.utils import *
 
 def create_config(form_conf, replacements):
@@ -14,33 +13,30 @@ def create_config(form_conf, replacements):
     # Объединяем строки обратно в одну строку
     return '\n'.join(lines)
 
-def create_str_client_conf():
+def create_str_client_conf(ip_addr, private_key):
     replacements = {
-        'Address =': f"{IP_ADDRESS}/24",
-        'PrivateKey =': PRIVATE_KEY
+        'Address =': f"{ip_addr}/24",
+        'PrivateKey =': private_key
     }
     return create_config(FORM_CLI_CONF, replacements)
 
-def create_str_wg_conf():
+def create_str_wg_conf(ip_addr, public_key):
     replacements = {
-        'PublicKey =': PUBLIC_KEY,
-        'AllowedIPs =': f"{IP_ADDRESS}/32"
+        'PublicKey =': public_key,
+        'AllowedIPs =': f"{ip_addr}/32"
     }
     return create_config(FORM_WG0_CONF, replacements)
 
-def append_client_to_conf(name, type_write):
+def append_client_to_conf(name, type_write, ip_addr, key):
     # x - на создание, a - на добавление в конец
     try:
         with open(WORK_DIR+name+CONF, type_write) as config_file:
             if name == WG0: 
-                config_file.write(create_str_wg_conf())
+                config_file.write(create_str_wg_conf(ip_addr, key))
             else:
-                config_file.write(create_str_client_conf())
-        print(f"WireGuard configuration file created at {WORK_DIR+name+CONF}")
+                config_file.write(create_str_client_conf(ip_addr, key))
+        print(f"Файл конфигурации WireGuard создан по адресу {WORK_DIR+name+CONF}")
     except PermissionError:
-        print("Permission denied: You need to run this script with sudo.")
+        print("Ошибка доступа: Вам нужно запустить этот скрипт с правами sudo.")
     except Exception as e:
-        print(f"An error occurred: {e}")
-
-if __name__ == "__main__":
-    main()
+        print(f"Произошла ошибка: {e}")

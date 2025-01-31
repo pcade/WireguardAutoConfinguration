@@ -1,5 +1,6 @@
 wg0.conf
 20ios.conf
 .env
+test.py
 
 __pycache__

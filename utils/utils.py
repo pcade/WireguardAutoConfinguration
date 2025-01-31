@@ -18,7 +18,8 @@ CONF = '.conf'
 
 WG0 = 'wg0'
 
-FORM_WG0_CONF = '''[Peer]
+FORM_WG0_CONF = '''\n\n[Peer]
+#
 PublicKey =
 AllowedIPs =
 '''
