@@ -39,5 +39,5 @@ PrivateKey =
 PublicKey = {PublicKey}
 AllowedIPs = {AllowedIPs}
 Endpoint = {Endpoint}
-PersistentKeepalive = {PersistentKeepalive}
+PersistentKeepalive = {PersistentKeepalive}\n
 '''
