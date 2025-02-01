@@ -1,6 +1,6 @@
 from utils.utils import *
 
-def create_config(form_conf, replacements):
+def create_config(form_conf, replacements) -> str:
     '''
     Проходим по каждой строке
     Заменяем указанные шаблоны на заданные значения
@@ -13,14 +13,14 @@ def create_config(form_conf, replacements):
     # Объединяем строки обратно в одну строку
     return '\n'.join(lines)
 
-def create_str_client_conf(ip_addr, private_key):
+def create_str_client_conf(ip_addr, private_key) -> str:
     replacements = {
         'Address =': f"{ip_addr}/24",
         'PrivateKey =': private_key
     }
     return create_config(FORM_CLI_CONF, replacements)
 
-def create_str_wg_conf(ip_addr, public_key):
+def create_str_wg_conf(ip_addr, public_key) -> str:
     replacements = {
         'PublicKey =': public_key,
         'AllowedIPs =': f"{ip_addr}/32"
@@ -35,8 +35,5 @@ def append_client_to_conf(name, type_write, ip_addr, key):
                 config_file.write(create_str_wg_conf(ip_addr, key))
             else:
                 config_file.write(create_str_client_conf(ip_addr, key))
-        print(f"Файл конфигурации WireGuard создан по адресу {WORK_DIR+name+CONF}")
-    except PermissionError:
-        print("Ошибка доступа: Вам нужно запустить этот скрипт с правами sudo.")
     except Exception as e:
-        print(f"Произошла ошибка: {e}")
+        print(f"Произошла ошибка в append_client_to_conf: {e}")

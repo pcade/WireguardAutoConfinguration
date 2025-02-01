@@ -1,5 +1,3 @@
-markdown
-
 # WireguardAutoConfiguration
 
 ## Описание
@@ -26,5 +24,6 @@ Code
 
 ```bash
 pip install python-dotenv
+pip install qrcode[pil]
 ```
 ### Использование
