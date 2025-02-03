@@ -1,8 +1,8 @@
 from utils.utils import *
 
-def create_config(form_conf, replacements) -> str:
-    '''
-    Проходим по каждой строке
+
+def create_config(form_conf: str, replacements: dict) -> str:
+    '''Проходим по каждой строке
     Заменяем указанные шаблоны на заданные значения
     '''
     lines = form_conf.splitlines()
@@ -13,21 +13,24 @@ def create_config(form_conf, replacements) -> str:
     # Объединяем строки обратно в одну строку
     return '\n'.join(lines)
 
-def create_str_client_conf(ip_addr, private_key) -> str:
+
+def create_str_client_conf(ip_addr: str, private_key: str) -> str:
     replacements = {
         'Address =': f"{ip_addr}/24",
         'PrivateKey =': private_key
     }
     return create_config(FORM_CLI_CONF, replacements)
 
-def create_str_wg_conf(ip_addr, public_key) -> str:
+
+def create_str_wg_conf(ip_addr: str, public_key: str) -> str:
     replacements = {
         'PublicKey =': public_key,
         'AllowedIPs =': f"{ip_addr}/32"
     }
     return create_config(FORM_WG0_CONF, replacements)
 
-def append_client_to_conf(name, type_write, ip_addr, key):
+
+def append_client_to_conf(name: str, type_write: str, ip_addr: str, key: str):
     # x - на создание, a - на добавление в конец
     try:
         with open(WORK_DIR+name+CONF, type_write) as config_file:

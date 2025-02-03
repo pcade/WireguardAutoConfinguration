@@ -6,31 +6,41 @@ CLIENT_NAME = 'test'
 
 
 from modules.key_manager import *
-private_key = create_private_keys(CLIENT_NAME).decode().strip()
-public_key = create_pub_keys(private_key, CLIENT_NAME).decode().strip()
-
-
-from modules.ip_manager import *
-ip_address = increment_ip(get_last_allowed_ip(WG0+CONF))
-
-
-
-from modules.config_manager import *
-append_client_to_conf(CLIENT_NAME, 'x', ip_address, private_key)
-append_client_to_conf(WG0, 'a', ip_address, public_key)
-
-from modules.qr_generator import qr_main
-qr_main(WORK_DIR+CLIENT_NAME+CONF)
-
-import modules.daemon_reload
-modules.daemon_reload.main
-#IP_ADDRESS = IncrementIp(GetLastAllowedIp('wg0.conf'))
-
-#AppendClientToConf(WG0, 'a')
-
-
-#def main():
-#    pass
+#private_key = create_private_keys(CLIENT_NAME).decode().strip()
+#public_key = create_pub_keys(private_key, CLIENT_NAME).decode().strip()
 #
-#if __name__ == "__main__":
-#    main()
+#
+from modules.ip_manager import *
+#ip_address = increment_ip(get_last_allowed_ip(WG0+CONF))
+#
+from modules.config_manager import *
+#append_client_to_conf(CLIENT_NAME, 'x', ip_address, private_key)
+#append_client_to_conf(WG0, 'a', ip_address, public_key)
+#
+from modules.qr_generator import qr_main
+#qr_main(WORK_DIR+CLIENT_NAME+CONF)
+#
+import modules.daemon_reload
+#modules.daemon_reload.main
+
+from modules.argparser import parse_args
+
+
+
+def main():
+    args = parse_args()
+    if args.name != None:
+        CLIENT_NAME = args.name
+    else:
+        CLIENT_NAME = 'test'
+    private_key = create_private_keys(CLIENT_NAME).decode().strip()
+    public_key = create_pub_keys(private_key, CLIENT_NAME).decode().strip()
+    ip_address = increment_ip(get_last_allowed_ip(WG0+CONF))
+    append_client_to_conf(CLIENT_NAME, 'x', ip_address, private_key)
+    append_client_to_conf(WG0, 'a', ip_address, public_key)
+    qr_main(WORK_DIR+CLIENT_NAME+CONF)
+#    modules.daemon_reload.main
+#
+if __name__ == "__main__":
+    main()
+#print(f"ip: {args.ip}, comment: {args.comment}, clinet: {CLIENT_NAME}")

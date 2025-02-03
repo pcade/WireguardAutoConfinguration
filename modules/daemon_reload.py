@@ -1,10 +1,9 @@
 import subprocess
 from typing import Optional
 
-def run_system_command(command: str) -> Optional[str]:
-    """
-    Выполняет системную команду и возвращает её вывод.
 
+def run_system_command(command: str) -> Optional[str]:
+    """Выполняет системную команду и возвращает её вывод.
     :param command: Системная команда для выполнения.
     :return: Вывод команды или None, если произошла ошибка.
     """
@@ -22,10 +21,9 @@ def run_system_command(command: str) -> Optional[str]:
         print(f"Ошибка при выполнении команды '{command}': {e.stderr}")
         return None
 
-def restart_service(service_name: str) -> bool:
-    """
-    Перезапускает указанный сервис с помощью systemctl.
 
+def restart_service(service_name: str) -> bool:
+    """Перезапускает указанный сервис с помощью systemctl.
     :param service_name: Имя сервиса для перезапуска.
     :return: True, если сервис успешно перезапущен, иначе False.
     """
@@ -39,9 +37,10 @@ def restart_service(service_name: str) -> bool:
         print(f"Не удалось перезапустить сервис {service_name}.")
         return False
 
+
 def main():
-    """
-    Основная функция скрипта, которая перезапускает сервисы bind9 и wg-quick@wg0.service.
+    """Основная функция скрипта,
+    которая перезапускает сервисы bind9 и wg-quick@wg0.service.
     """
     services_to_restart = ["bind9", "wg-quick@wg0.service"]
     
@@ -51,6 +50,7 @@ def main():
             return
 
     print("Все сервисы успешно перезапущены.")
+
 
 if __name__ == "__main__":
     main()

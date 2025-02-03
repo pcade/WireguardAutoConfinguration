@@ -1,6 +1,10 @@
 from utils.utils import *
 
+
 def get_last_allowed_ip(file_path):
+    '''Извлекает последний доступный
+    ip из файла конфигурации
+    '''
     last_allowed_ip = None
     try:
         with open(file_path, 'r') as file:
@@ -12,7 +16,10 @@ def get_last_allowed_ip(file_path):
         print(f"Оишбка в GetLastAllowedIp(file_path): {error}")
     return last_allowed_ip
 
+
 def increment_ip(ip_address):
+    '''Извлекает последний актет
+    '''
     octets = ip_address.split('.')
     last_octet = int(octets[-1]) + 1
 

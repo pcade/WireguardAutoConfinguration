@@ -2,6 +2,9 @@
 from dotenv import load_dotenv
 import os
 
+NAME = 'WireguardAutoConfinguration'
+VERSION = '0.1'
+
 # Загружаем переменные окружения из файла .env
 load_dotenv()
 
