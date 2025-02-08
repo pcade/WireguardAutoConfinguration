@@ -1,4 +1,5 @@
 from utils.utils import *
+import ipaddress
 
 
 def get_last_allowed_ip(file_path):
@@ -27,3 +28,14 @@ def increment_ip(ip_address):
         raise ValueError("Последний октет превышает допустимый диапазон (0-250)")
     octets[-1] = str(last_octet)
     return '.'.join(octets)
+
+
+def validate_ip(ip):
+    '''Проверяет, является ли строка корректным IP-адресом.
+    '''
+    try:
+        ipaddress.ip_address(ip)
+        return True
+    except ValueError:
+        print(f"Некорректный IP-адрес: {ip}")
+        return False
