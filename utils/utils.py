@@ -8,8 +8,8 @@ VERSION = '0.1'
 # Загружаем переменные окружения из файла .env
 load_dotenv()
 
-#WORK_DIR = '/etc/wireguard/'
-WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/WireguardAutoConfinguration/"
+WORK_DIR = '/etc/wireguard/'
+#WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/WireguardAutoConfinguration/"
 END_PRIVATE_KEY = '_private.key'
 END_PUBLIC_KEY = '_public.key'
 SUDO_TEE = 'sudo tee'
