@@ -1,5 +1,6 @@
 from utils.utils import *
 import ipaddress
+import sys
 
 
 def get_last_allowed_ip(file_path):
@@ -39,3 +40,11 @@ def validate_ip(ip):
     except ValueError:
         print(f"Некорректный IP-адрес: {ip}")
         return False
+
+def get_ip_address(args):
+    """Получить IP-адрес из аргументов или сгенерировать новый."""
+    if args.ip:
+        if not validate_ip(args.ip):
+            sys.exit(1)
+        return args.ip
+    return increment_ip(get_last_allowed_ip(WG0 + CONF))

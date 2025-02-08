@@ -14,3 +14,9 @@ def create_pub_keys(private_key, client_name):
     process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout_pub_key, stderr = process.communicate()
     return(stdout_pub_key)
+
+def create_keys(client_name):
+    """Создать закрытый и открытый ключи для клиента."""
+    private_key = create_private_keys(client_name).decode().strip()
+    public_key = create_pub_keys(private_key, client_name).decode().strip()
+    return private_key, public_key
