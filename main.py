@@ -18,7 +18,7 @@ def main():
 
     private_key, public_key = create_keys(client_name)
     
-    append_client_to_configuration(client_name, ip_address, private_key, public_key)
+    append_client_to_configuration(client_name, ip_address, private_key, public_key, comment)
 
     qr_main(WORK_DIR + client_name + CONF)
 
