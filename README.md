@@ -29,10 +29,9 @@ AllowedIPs=[allowed addresses, e.g., 0.0.0.0/0]
 PersistentKeepalive=[custom parameter, e.g., 22]
 ```
 
-1. Установите библиотеку `python-dotenv` для считывания переменных из файла `.env` / Install the python-dotenv library to read variables from the .env file:
+1. Установите зависимости из `requirements.txt` / Install the depentions from `requirements.txt`:
 
 ```bash
-pip install python-dotenv
-pip install qrcode[pil]
+pip install -r requirements.txt
 ```
 ### Использование
