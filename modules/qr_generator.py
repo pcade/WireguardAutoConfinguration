@@ -1,5 +1,5 @@
-import qrcode
-from qrcode.constants import ERROR_CORRECT_L
+import qrcode # type: ignore
+from qrcode.constants import ERROR_CORRECT_L # type: ignore
 
 
 def read_file_content(file_path: str) -> str:

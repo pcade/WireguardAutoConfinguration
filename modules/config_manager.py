@@ -34,10 +34,11 @@ def create_str_wg_conf(ip_addr: str, public_key: str, comment: str) -> str:
 def append_client_to_conf(name: str, type_write: str, ip_addr: str, key: str, comment: str):
     # x - на создание, a - на добавление в конец
     try:
-        with open(WORK_DIR+name+CONF, type_write) as config_file:
-            if name == WG0: 
+        if name == WG0:
+            with open(WORK_DIR+name+CONF, type_write) as config_file:
                 config_file.write(create_str_wg_conf(ip_addr, key, comment))
-            else:
+        else:
+            with open(WORK_DIR+CONFIGS_DIR+name+CONF, type_write) as config_file:
                 config_file.write(create_str_client_conf(ip_addr, key))
     except Exception as e:
         print(f"Произошла ошибка в append_client_to_conf: {e}")

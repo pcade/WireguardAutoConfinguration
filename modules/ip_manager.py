@@ -47,4 +47,4 @@ def get_ip_address(args):
         if not validate_ip(args.ip):
             sys.exit(1)
         return args.ip
-    return increment_ip(get_last_allowed_ip(WG0 + CONF))
+    return increment_ip(get_last_allowed_ip(f"{WORK_DIR}{WG0}{CONF}"))

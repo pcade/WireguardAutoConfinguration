@@ -14,4 +14,4 @@ def get_client_name(args):
         if not is_ascii(args.name):
             sys.exit(1)
         return args.name
-    return 'test'
+    return 'noName'

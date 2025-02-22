@@ -1,3 +1,4 @@
+import sys
 from utils.utils import *
 from modules.key_manager import *
 from modules.ip_manager import *
@@ -8,8 +9,11 @@ from modules.qr_generator import qr_main
 import modules.daemon_reload
 from modules.argparser import parse_args
 from modules.str_checker import *
+from.modules.fs_worker import *
 
 def main():
+    if pre_start_checks() == False:
+        sys.exit(1)
     args = parse_args()
     
     client_name = get_client_name(args)
