@@ -9,10 +9,10 @@ from modules.qr_generator import qr_main
 import modules.daemon_reload
 from modules.argparser import parse_args
 from modules.str_checker import *
-from.modules.fs_worker import *
+import modules.fs_worker
 
 def main():
-    if pre_start_checks() == False:
+    if modules.fs_worker.pre_start_checks() == False:
         sys.exit(1)
     args = parse_args()
     
@@ -24,7 +24,7 @@ def main():
     
     append_client_to_configuration(client_name, ip_address, private_key, public_key, comment)
 
-    qr_main(WORK_DIR + client_name + CONF)
+    qr_main(WORK_DIR + CONFIGS_DIR + client_name + CONF)
 
 if __name__ == "__main__":
     main()
