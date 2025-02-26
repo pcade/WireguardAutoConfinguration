@@ -46,3 +46,6 @@ AllowedIPs = {AllowedIPs}
 Endpoint = {Endpoint}
 PersistentKeepalive = {PersistentKeepalive}\n
 '''
+
+RETURN = {'conf': '',
+          'qr' : ''}

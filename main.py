@@ -27,8 +27,15 @@ def main():
     
     append_client_to_configuration(client_name, ip_address, private_key, public_key, comment)
 
-    qr_main(WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + CONF,
-            WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + '.png')
+    path_conf = WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + CONF
+    path_qr = WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + '.png'
+
+    qr_main(path_conf, path_qr)
+
+    RETURN['conf'] = path_conf
+    RETURN['qr'] = path_qr
+
+    return RETURN
 
 if __name__ == "__main__":
     main()
