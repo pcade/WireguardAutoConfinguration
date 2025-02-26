@@ -9,7 +9,10 @@ def is_ascii(s):
         return False
 
 def get_client_name(args):
-    """Получить имя клиента из аргументов или использовать значение по умолчанию."""
+    """
+    Получить имя клиента из аргументов или
+    использовать значение по умолчанию.
+    """
     if args.name:
         if not is_ascii(args.name):
             sys.exit(1)

@@ -2,7 +2,8 @@ from utils.utils import *
 
 
 def create_config(form_conf: str, replacements: dict) -> str:
-    '''Проходим по каждой строке
+    '''
+    Проходим по каждой строке
     Заменяем указанные шаблоны на заданные значения
     '''
     lines = form_conf.splitlines()
@@ -38,7 +39,7 @@ def append_client_to_conf(name: str, type_write: str, ip_addr: str, key: str, co
             with open(WORK_DIR+name+CONF, type_write) as config_file:
                 config_file.write(create_str_wg_conf(ip_addr, key, comment))
         else:
-            with open(WORK_DIR+CONFIGS_DIR+name+CONF, type_write) as config_file:
+            with open(f"{WORK_DIR}{CONFIGS_DIR}/{name}/{name}{CONF}", type_write) as config_file:
                 config_file.write(create_str_client_conf(ip_addr, key))
     except Exception as e:
         print(f"Произошла ошибка в append_client_to_conf: {e}")

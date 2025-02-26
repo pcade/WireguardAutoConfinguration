@@ -57,3 +57,20 @@ def pre_start_checks() -> bool:
     if not dir_checker(f"{WORK_DIR}{CONFIGS_DIR}"):
         dir_creator(WORK_DIR, CONFIGS_DIR)
     return True
+
+def path_worker(name: str) -> bool:
+    """
+    Проверят наличие создаваемого пути и
+    создаёт рабочую директорию.
+
+    :name: имя создаваемой директориии
+    :return: True, если директория существует, иначе False.
+    """
+    if dir_checker(WORK_DIR + name):
+        print('Директория конфигурации с таким именем уже существует')
+        return False
+    if file_checker(f"{WORK_DIR}{name}/{name}{CONF}"):
+        print('Конфигурация с таким именем уже существует')
+        return False
+    dir_creator(WORK_DIR + CONFIGS_DIR, name)
+    return True

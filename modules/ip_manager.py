@@ -3,9 +3,13 @@ import ipaddress
 import sys
 
 
-def get_last_allowed_ip(file_path):
-    '''Извлекает последний доступный
+def get_last_allowed_ip(file_path) -> str:
+    '''
+    Извлекает последний доступный
     ip из файла конфигурации
+
+    :file_path: str
+    :return: str
     '''
     last_allowed_ip = None
     try:
@@ -19,8 +23,13 @@ def get_last_allowed_ip(file_path):
     return last_allowed_ip
 
 
-def increment_ip(ip_address):
-    '''Извлекает последний актет
+def increment_ip(ip_address) -> str:
+    '''
+    Извлекает последний актет
+    и возвращает ip
+
+    :ip_address: str
+    :return: str
     '''
     octets = ip_address.split('.')
     last_octet = int(octets[-1]) + 1
@@ -31,8 +40,12 @@ def increment_ip(ip_address):
     return '.'.join(octets)
 
 
-def validate_ip(ip):
-    '''Проверяет, является ли строка корректным IP-адресом.
+def validate_ip(ip) -> bool:
+    '''
+    Проверяет, является ли строка корректным IP-адресом.
+
+    :ip: str
+    :return: bool
     '''
     try:
         ipaddress.ip_address(ip)
@@ -41,8 +54,13 @@ def validate_ip(ip):
         print(f"Некорректный IP-адрес: {ip}")
         return False
 
-def get_ip_address(args):
-    """Получить IP-адрес из аргументов или сгенерировать новый."""
+def get_ip_address(args) -> str:
+    '''
+    Получить IP-адрес из аргументов или сгенерировать новый.
+
+    :args: str
+    :return: str
+    '''
     if args.ip:
         if not validate_ip(args.ip):
             sys.exit(1)

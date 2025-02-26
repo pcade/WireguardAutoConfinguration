@@ -16,7 +16,10 @@ def main():
         sys.exit(1)
     args = parse_args()
     
-    client_name = get_client_name(args)
+    client_name = args.name if args.name else f"auto_{increment_ip(get_last_allowed_ip(f'{WORK_DIR}{WG0}{CONF}')).split('.')[-1]}"
+
+    modules.fs_worker.path_worker(client_name)
+
     ip_address = get_ip_address(args)
     comment = args.comment if args.comment else ''
 
@@ -24,7 +27,8 @@ def main():
     
     append_client_to_configuration(client_name, ip_address, private_key, public_key, comment)
 
-    qr_main(WORK_DIR + CONFIGS_DIR + client_name + CONF)
+    qr_main(WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + CONF,
+            WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + '.png')
 
 if __name__ == "__main__":
     main()
