@@ -1,4 +1,5 @@
 import sys
+import json
 from utils.utils import *
 from modules.key_manager import *
 from modules.ip_manager import *
@@ -38,4 +39,6 @@ def main():
     return RETURN
 
 if __name__ == "__main__":
-    main()
+    result = main()
+    # Вывод результата в формате JSON
+    sys.stdout.write(json.dumps(result))
