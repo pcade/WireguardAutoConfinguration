@@ -33,12 +33,11 @@ def main():
 
     qr_main(path_conf, path_qr)
 
-    RETURN['conf'] = path_conf
-    RETURN['qr'] = path_qr
 
-    return RETURN
+    if args.json:
+        RETURN['conf'] = path_conf
+        RETURN['qr'] = path_qr
+        sys.stdout.write(json.dumps(RETURN))
 
 if __name__ == "__main__":
-    result = main()
-    # Вывод результата в формате JSON
-    sys.stdout.write(json.dumps(result))
+    main() 

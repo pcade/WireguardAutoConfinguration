@@ -31,4 +31,11 @@ def parse_args() -> argparse.Namespace:
         version=VERSION,
         help='Вывод версии пакета'
     )
+
+    parser.add_argument(
+        '--json',
+        action='store_true',
+        help=' Вывод словаря с путями к конфигурационному файлу и qr коду'
+    )
+
     return parser.parse_args()
