@@ -1,5 +1,5 @@
 from utils.utils import *
-
+import re
 
 def create_config(form_conf: str, replacements: dict) -> str:
     '''
@@ -48,3 +48,23 @@ def append_client_to_configuration(client_name, ip_address, private_key, public_
     """Добавить клиента в конфигурацию."""
     append_client_to_conf(client_name, 'x', ip_address, private_key, comment='')
     append_client_to_conf(WG0, 'a', ip_address, public_key, comment)
+
+def extract_ip_addresses(config_file_path: str) -> list:
+    """
+    Извлекает все IP-адреса из указанного файла конфигурации.
+    
+    :param config_file_path: Путь к файлу конфигурации (str).
+    :return: Список IP-адресов (list).
+    """
+    ip_addresses = []
+    try:
+        with open(config_file_path, 'r') as config_file:
+            for line in config_file:
+                # Ищем строки, содержащие IP-адреса
+                match = re.search(r'(?:(?:Address|AllowedIPs)\s*=\s*)([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?:/[0-9]+)?)', line)
+                if match:
+                    ip_addresses.append(match.group(1))
+    except Exception as e:
+        print(f"Произошла ошибка при извлечении IP-адресов: {e}")
+    
+    return ip_addresses

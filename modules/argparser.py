@@ -26,6 +26,12 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        '--config',
+        action='store_true',
+        help='Параметр отображения текущих ip адрессов в конфигурационном файле'
+    )
+
+    parser.add_argument(
         '--version',
         action='version',
         version=VERSION,
