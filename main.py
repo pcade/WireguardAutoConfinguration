@@ -10,6 +10,7 @@ from modules.qr_generator import qr_main
 import modules.daemon_reload
 from modules.argparser import parse_args
 from modules.str_checker import *
+import modules.daemon_reload
 import modules.fs_worker
 
 def main():
@@ -18,7 +19,7 @@ def main():
     args = parse_args()
 
     if args.config:
-        ip_list = extract_ip_addresses(f'{WORK_DIR}{WG0}{CONF}')
+        ip_list: list = extract_ip_addresses(f'{WORK_DIR}{WG0}{CONF}')
         return sys.stdout.write(json.dumps(ip_list))
 
     client_name = args.name if args.name else f"auto_{increment_ip(get_last_allowed_ip(f'{WORK_DIR}{WG0}{CONF}')).split('.')[-1]}"
@@ -42,5 +43,7 @@ def main():
         RETURN['qr'] = path_qr
         sys.stdout.write(json.dumps(RETURN))
 
+    modules.daemon_reload.main()
+
 if __name__ == "__main__":
-    main() 
+    main()

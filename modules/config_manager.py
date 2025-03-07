@@ -51,8 +51,8 @@ def append_client_to_configuration(client_name, ip_address, private_key, public_
 
 def extract_ip_addresses(config_file_path: str) -> list:
     """
-    Извлекает все IP-адреса из указанного файла конфигурации.
-    
+    Извлекает все IP-адреса из указанного файла конфигурации без масок.
+
     :param config_file_path: Путь к файлу конфигурации (str).
     :return: Список IP-адресов (list).
     """
@@ -61,10 +61,10 @@ def extract_ip_addresses(config_file_path: str) -> list:
         with open(config_file_path, 'r') as config_file:
             for line in config_file:
                 # Ищем строки, содержащие IP-адреса
-                match = re.search(r'(?:(?:Address|AllowedIPs)\s*=\s*)([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+(?:/[0-9]+)?)', line)
+                match = re.search(r'(?:(?:Address|AllowedIPs)\s*=\s*)([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(?:/[0-9]+)?', line)
                 if match:
-                    ip_addresses.append(match.group(1))
+                    ip_addresses.append(match.group(1))  # Добавляем только IP-адрес без маски
     except Exception as e:
         print(f"Произошла ошибка при извлечении IP-адресов: {e}")
-    
+
     return ip_addresses

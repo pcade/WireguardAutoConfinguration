@@ -3,13 +3,13 @@ from dotenv import load_dotenv
 import os
 
 NAME = 'WireguardAutoConfinguration'
-VERSION = '0.1'
+VERSION = '1'
 
 # Загружаем переменные окружения из файла .env
 load_dotenv()
 
-#WORK_DIR = '/etc/wireguard/'
-WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/"
+WORK_DIR = '/etc/wireguard/'
+#WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/"
 APP_DIR = "WireguardAutoConfinguration/"
 CONFIGS_DIR = "configs/"
 END_PRIVATE_KEY = '_private.key'
