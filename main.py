@@ -10,7 +10,7 @@ from modules.qr_generator import qr_main
 import modules.daemon_reload
 from modules.argparser import parse_args
 from modules.str_checker import *
-import modules.daemon_reload
+from modules.daemon_reload import reload_daemon
 import modules.fs_worker
 
 def main():
@@ -43,7 +43,8 @@ def main():
         RETURN['qr'] = path_qr
         sys.stdout.write(json.dumps(RETURN))
 
-    modules.daemon_reload.main()
+    if args.daemonreload:
+        reload_daemon()
 
 if __name__ == "__main__":
     main()

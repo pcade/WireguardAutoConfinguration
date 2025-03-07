@@ -38,7 +38,7 @@ def restart_service(service_name: str) -> bool:
         return False
 
 
-def main():
+def reload_daemon():
     """Основная функция скрипта,
     которая перезапускает сервисы bind9 и wg-quick@wg0.service.
     """
@@ -50,7 +50,3 @@ def main():
             return
 
     print("Все сервисы успешно перезапущены.")
-
-
-if __name__ == "__main__":
-    main()

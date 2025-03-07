@@ -32,6 +32,12 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        '--daemonreload',
+        action='store_true',
+        help='Параметр перезагрузки сервисов'
+    )
+
+    parser.add_argument(
         '--version',
         action='version',
         version=VERSION,
