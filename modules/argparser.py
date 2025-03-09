@@ -32,6 +32,12 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        '--remove',
+        type=str,
+        help='Параметр удаленимя конфигурации'
+    )
+
+    parser.add_argument(
         '--config',
         action='store_true',
         help='Параметр отображения текущих ip адрессов в конфигурационном файле'

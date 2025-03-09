@@ -106,3 +106,62 @@ def extract_ip_addresses(config_file_path: str) -> list:
         print(f"Произошла ошибка при извлечении IP-адресов: {e}")
 
     return ip_addresses
+
+def remove_configuration_by_ip(ip_address: str) -> None:
+    """
+    Удаляет конфигурацию по указанному IP-адресу из файла конфигурации.
+
+    :param ip_address: IP-адрес, конфигурацию которого нужно удалить (str);
+    :return: None.
+    """
+    try:
+        config_text = read_configuration_file()
+        updated_config_text = remove_ip_configuration(config_text, ip_address)
+        write_configuration_file(updated_config_text)
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+
+
+def read_configuration_file() -> str:
+    """
+    Читает файл конфигурации и возвращает его содержимое.
+
+    :return: Содержимое файла конфигурации (str).
+    """
+    with open(WORK_DIR + WG0 + CONF, 'r') as config_file:
+        return config_file.read()
+
+
+def write_configuration_file(config_text: str) -> None:
+    """
+    Записывает обновленное содержимое в файл конфигурации.
+
+    :param config_text: Содержимое для записи в файл (str).
+    :return: None.
+    """
+    with open(WORK_DIR + WG0 + CONF, 'w') as config_file:
+        config_file.write(config_text)
+
+
+def remove_ip_configuration(config_text: str, ip_address: str) -> str:
+    """
+    Удаляет конфигурацию для указанного IP-адреса из текста конфигурации.
+
+    :param config_text: Содержимое файла конфигурации (str);
+    :param ip_address: IP-адрес, конфигурацию которого нужно удалить (str);
+    :return: Обновленное содержимое файла конфигурации (str).
+    """
+    search_string = f'AllowedIPs = {ip_address}/32'
+    start_index = config_text.find(search_string)
+
+    if start_index == -1:
+        return config_text  # Если строка не найдена, возвращаем оригинальный текст
+
+    peer_index = config_text.rfind('[Peer]', 0, start_index)
+
+    if peer_index == -1:
+        # Если [Peer] не найден, удаляем от найденной строки до конца текста
+        return config_text[:start_index]
+    else:
+        # Удаляем текст от [Peer] до конца строки с AllowedIPs
+        return config_text[:peer_index]

@@ -27,6 +27,9 @@ def main():
     modules.fs_worker.path_worker(client_name)
 
     ip_address = get_ip_address(args)
+    if args.remove:
+        remove_configuration_by_ip(args.remove)
+        sys.exit(0)
     comment = args.comment if args.comment else ''
     date = args.date if args.date else ''
 
