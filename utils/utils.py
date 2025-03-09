@@ -1,6 +1,7 @@
 # File for GLOBALS
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 NAME = 'WireguardAutoConfinguration'
 VERSION = '1'
@@ -8,8 +9,10 @@ VERSION = '1'
 # Загружаем переменные окружения из файла .env
 load_dotenv()
 
-WORK_DIR = '/etc/wireguard/'
-#WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/"
+TODAY = datetime.now().strftime("%d.%m.%Y")
+
+#WORK_DIR = '/etc/wireguard/'
+WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/"
 APP_DIR = "WireguardAutoConfinguration/"
 CONFIGS_DIR = "configs/"
 END_PRIVATE_KEY = '_private.key'
@@ -24,7 +27,9 @@ CONF = '.conf'
 WG0 = 'wg0'
 
 FORM_WG0_CONF = '''\n\n[Peer]
-#
+# name:
+# date:
+# commnet:
 PublicKey =
 AllowedIPs =
 '''

@@ -28,10 +28,12 @@ def main():
 
     ip_address = get_ip_address(args)
     comment = args.comment if args.comment else ''
+    date = args.date if args.date else ''
 
     private_key, public_key = create_keys(client_name)
 
-    append_client_to_configuration(client_name, ip_address, private_key, public_key, comment)
+    create_client_to_configuration(client_name, ip_address, private_key)
+    append_client_to_configuration(ip_address, public_key, client_name, date, comment)
 
     path_conf = WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + CONF
     path_qr = WORK_DIR + CONFIGS_DIR + client_name + '/' + client_name + '.png'

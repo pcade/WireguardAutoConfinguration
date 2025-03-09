@@ -20,6 +20,12 @@ def parse_args() -> argparse.Namespace:
     )
 
     parser.add_argument(
+        '--date',
+        type=str,
+        help='Параметр передачи даты в формате "Д/М/Г"'
+    )
+
+    parser.add_argument(
         '--comment',
         type=str,
         help='Параметр передачи комментария к создаваемой конфигурации'

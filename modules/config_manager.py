@@ -2,10 +2,14 @@ from utils.utils import *
 import re
 
 def create_config(form_conf: str, replacements: dict) -> str:
-    '''
-    Проходим по каждой строке
-    Заменяем указанные шаблоны на заданные значения
-    '''
+    """
+    Проходит по каждой строке конфигурации и заменяет
+    указанные шаблоны на заданные значения.
+
+    :param form_conf: Строка конфигурации (str);
+    :param replacements: Словарь замен (dict);
+    :return: Обновленная строка конфигурации (str).
+    """
     lines = form_conf.splitlines()
     for i, line in enumerate(lines):
         for placeholder, value in replacements.items():
@@ -16,6 +20,13 @@ def create_config(form_conf: str, replacements: dict) -> str:
 
 
 def create_str_client_conf(ip_addr: str, private_key: str) -> str:
+    """
+    Создает строку конфигурации клиента.
+
+    :param ip_addr: IP-адрес клиента (str);
+    :param private_key: Приватный ключ клиента (str);
+    :return: Строка конфигурации клиента (str).
+    """
     replacements = {
         'Address =': f"{ip_addr}/24",
         'PrivateKey =': private_key
@@ -23,37 +34,64 @@ def create_str_client_conf(ip_addr: str, private_key: str) -> str:
     return create_config(FORM_CLI_CONF, replacements)
 
 
-def create_str_wg_conf(ip_addr: str, public_key: str, comment: str) -> str:
+def create_str_wg_conf(ip_addr: str, public_key: str, name: str, date: str, comment: str) -> str:
+    """
+    Создает строку конфигурации WireGuard.
+
+    :param ip_addr: IP-адрес клиента (str);
+    :param public_key: Публичный ключ клиента (str);
+    :param name: Имя клиента (str);
+    :param date: Дата добавления клиента (str);
+    :param comment: Комментарий к клиенту (str);
+    :return: Строка конфигурации WireGuard (str).
+    """
     replacements = {
-        '#': comment,
+        '# name:': name,
+        '# date:': f"{TODAY} - {date}",
+        '# commnet:': comment,
         'PublicKey =': public_key,
         'AllowedIPs =': f"{ip_addr}/32"
     }
     return create_config(FORM_WG0_CONF, replacements)
 
 
-def append_client_to_conf(name: str, type_write: str, ip_addr: str, key: str, comment: str):
-    # x - на создание, a - на добавление в конец
+def append_client_to_configuration(ip_addr: str, public_key: str, name: str, date: str, comment: str) -> None:
+    """
+    Добавляет клиента в конфигурацию WireGuard.
+
+    :param ip_addr: IP-адрес клиента (str);
+    :param public_key: Публичный ключ клиента (str);
+    :param name: Имя клиента (str);
+    :param date: Дата добавления клиента (str);
+    :param comment: Комментарий к клиенту (str);
+    :return: None.
+    """
     try:
-        if name == WG0:
-            with open(WORK_DIR+name+CONF, type_write) as config_file:
-                config_file.write(create_str_wg_conf(ip_addr, key, comment))
-        else:
-            with open(f"{WORK_DIR}{CONFIGS_DIR}/{name}/{name}{CONF}", type_write) as config_file:
-                config_file.write(create_str_client_conf(ip_addr, key))
+        with open(WORK_DIR+WG0+CONF, 'a') as config_file:
+            config_file.write(create_str_wg_conf(ip_addr, public_key, name, date, comment))
     except Exception as e:
         print(f"Произошла ошибка в append_client_to_conf: {e}")
 
-def append_client_to_configuration(client_name, ip_address, private_key, public_key, comment):
-    """Добавить клиента в конфигурацию."""
-    append_client_to_conf(client_name, 'x', ip_address, private_key, comment='')
-    append_client_to_conf(WG0, 'a', ip_address, public_key, comment)
+def create_client_to_configuration(client_name: str, ip_address: str, private_key: str) -> None:
+    """
+    Добавляет клиента в конфигурацию.
+
+    :param client_name: Имя клиента (str);
+    :param ip_address: IP-адрес клиента (str);
+    :param private_key: Приватный ключ клиента (str);
+    :return: None.
+    """
+    try:
+            with open(f"{WORK_DIR}{CONFIGS_DIR}/{client_name}/{client_name}{CONF}", 'x') as config_file:
+                config_file.write(create_str_client_conf(ip_address, private_key))
+    except Exception as e:
+        print(f"Произошла ошибка в append_client_to_conf: {e}")
 
 def extract_ip_addresses(config_file_path: str) -> list:
     """
     Извлекает все IP-адреса из указанного файла конфигурации без масок.
 
-    :param config_file_path: Путь к файлу конфигурации (str).
+    :param config_file_path: Путь к файлу конфигурации (str);
     :return: Список IP-адресов (list).
     """
     ip_addresses = []
