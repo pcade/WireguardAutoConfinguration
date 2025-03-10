@@ -115,31 +115,33 @@ def remove_configuration_by_ip(ip_address: str) -> None:
     :return: None.
     """
     try:
-        config_text = read_configuration_file()
+        config_text = read_configuration_file(WORK_DIR + WG0 + CONF)
         updated_config_text = remove_ip_configuration(config_text, ip_address)
-        write_configuration_file(updated_config_text)
+        write_configuration_file(WORK_DIR + WG0 + CONF, updated_config_text)
     except Exception as e:
         print(f"Произошла ошибка: {e}")
 
 
-def read_configuration_file() -> str:
+def read_configuration_file(path: str) -> str:
     """
     Читает файл конфигурации и возвращает его содержимое.
 
+    :path: содержит путь к файлу (str):
     :return: Содержимое файла конфигурации (str).
     """
-    with open(WORK_DIR + WG0 + CONF, 'r') as config_file:
+    with open(path, 'r') as config_file:
         return config_file.read()
 
 
-def write_configuration_file(config_text: str) -> None:
+def write_configuration_file(path: str, config_text: str) -> None:
     """
     Записывает обновленное содержимое в файл конфигурации.
 
+    :path: содержит путь к файлу (str):
     :param config_text: Содержимое для записи в файл (str).
     :return: None.
     """
-    with open(WORK_DIR + WG0 + CONF, 'w') as config_file:
+    with open(path, 'w') as config_file:
         config_file.write(config_text)
 
 
