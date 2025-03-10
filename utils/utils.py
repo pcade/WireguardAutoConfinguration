@@ -11,8 +11,8 @@ load_dotenv()
 
 TODAY = datetime.now().strftime("%d.%m.%Y")
 
-#WORK_DIR = '/etc/wireguard/'
-WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/"
+WORK_DIR = '/etc/wireguard/'
+#WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/"
 APP_DIR = "WireguardAutoConfinguration/"
 CONFIGS_DIR = "configs/"
 END_PRIVATE_KEY = '_private.key'

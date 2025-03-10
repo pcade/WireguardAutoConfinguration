@@ -18,6 +18,14 @@ def main():
         sys.exit(1)
     args = parse_args()
 
+    if args.remove:
+        remove_configuration_by_ip(args.remove)
+        return sys.exit(0)
+
+    if args.daemonreload:
+        reload_daemon()
+        return sys.exit(0)
+
     if args.config:
         ip_list: list = extract_ip_addresses(f'{WORK_DIR}{WG0}{CONF}')
         return sys.stdout.write(json.dumps(ip_list))
@@ -27,9 +35,7 @@ def main():
     modules.fs_worker.path_worker(client_name)
 
     ip_address = get_ip_address(args)
-    if args.remove:
-        remove_configuration_by_ip(args.remove)
-        sys.exit(0)
+
     comment = args.comment if args.comment else ''
     date = args.date if args.date else ''
 
@@ -47,9 +53,6 @@ def main():
         RETURN['conf'] = path_conf
         RETURN['qr'] = path_qr
         sys.stdout.write(json.dumps(RETURN))
-
-    if args.daemonreload:
-        reload_daemon()
 
 if __name__ == "__main__":
     main()
