@@ -31,8 +31,8 @@ def main():
         return sys.exit(0)
 
     if args.config:
-        ip_list: list = extract_ip_addresses(f'{WORK_DIR}{WG0}{CONF}')
-        return sys.stdout.write(json.dumps(ip_list))
+        ip_list= extract_from_config(f'{WORK_DIR}{WG0}{CONF}')
+        return sys.stdout.write(ip_list)
 
     client_name = args.name if args.name else f"auto_{increment_ip(get_last_allowed_ip(f'{WORK_DIR}{WG0}{CONF}')).split('.')[-1]}"
 

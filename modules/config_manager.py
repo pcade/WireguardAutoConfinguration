@@ -1,5 +1,6 @@
-from utils.utils import *
+#from utils.utils import *
 import re
+import json
 
 def create_config(form_conf: str, replacements: dict) -> str:
     """
@@ -87,26 +88,6 @@ def create_client_to_configuration(client_name: str, ip_address: str, private_ke
     except Exception as e:
         print(f"Произошла ошибка в append_client_to_conf: {e}")
 
-def extract_ip_addresses(config_file_path: str) -> list:
-    """
-    Извлекает все IP-адреса из указанного файла конфигурации без масок.
-
-    :param config_file_path: Путь к файлу конфигурации (str);
-    :return: Список IP-адресов (list).
-    """
-    ip_addresses = []
-    try:
-        with open(config_file_path, 'r') as config_file:
-            for line in config_file:
-                # Ищем строки, содержащие IP-адреса
-                match = re.search(r'(?:(?:Address|AllowedIPs)\s*=\s*)([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)(?:/[0-9]+)?', line)
-                if match:
-                    ip_addresses.append(match.group(1))  # Добавляем только IP-адрес без маски
-    except Exception as e:
-        print(f"Произошла ошибка при извлечении IP-адресов: {e}")
-
-    return ip_addresses
-
 def remove_configuration_by_ip(ip_address: str) -> None:
     """
     Удаляет конфигурацию по указанному IP-адресу из файла конфигурации.
@@ -167,3 +148,43 @@ def remove_ip_configuration(config_text: str, ip_address: str) -> str:
     else:
         # Удаляем текст от [Peer] до конца строки с AllowedIPs
         return config_text[:peer_index]
+
+def extract_from_config(config_file_path: str) -> str:
+    """
+    Извлекает все строки из указанного файла конфигурации, которые не содержат ключи,
+    и возвращает их в формате JSON с группировкой по блокам [Peer].
+    Гарантирует, что каждая группа начинается с [Peer].
+
+    :param config_file_path: Путь к файлу конфигурации (str);
+    :return: JSON-строка, содержащая строки, сгруппированные по блокам [Peer] (str).
+    """
+    result = {}
+    current_group = None
+    group_counter = 1
+
+    try:
+        with open(config_file_path, 'r') as config_file:
+            for line in config_file:
+                line = line.strip()
+
+                # Пропускаем пустые строки
+                if not line:
+                    continue
+
+                # Если находим начало нового блока [Peer]
+                if line.startswith("[Peer]"):
+                    if current_group:
+                        group_counter += 1
+                    current_group = []  # Используем список для хранения строк
+                    current_group.append(line)  # Добавляем [Peer] первым элементом
+                    result[str(group_counter)] = current_group
+
+                # Добавляем строку в текущую группу, если она не содержит ключей
+                elif current_group is not None and not re.search(r'(Address|PrivateKey|PublicKey|ListenPort)\s*=', line):
+                    current_group.append(line)
+
+    except Exception as e:
+        print(f"Произошла ошибка при извлечении строк: {e}")
+
+    # Преобразуем словарь в JSON-строку
+    return json.dumps(result, ensure_ascii=False, indent=4)
