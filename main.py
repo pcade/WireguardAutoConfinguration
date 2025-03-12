@@ -26,6 +26,10 @@ def main():
         reload_daemon()
         return sys.exit(0)
 
+    if args.removeconfig:
+        modules.fs_worker.dir_remover(args.removeconfig)
+        return sys.exit(0)
+
     if args.config:
         ip_list: list = extract_ip_addresses(f'{WORK_DIR}{WG0}{CONF}')
         return sys.stdout.write(json.dumps(ip_list))

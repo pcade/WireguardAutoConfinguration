@@ -1,5 +1,6 @@
 from utils.utils import *
 import os
+import shutil
 
 def dir_creator(path: str, name: str) -> bool:
     """
@@ -74,3 +75,18 @@ def path_worker(name: str) -> bool:
         return False
     dir_creator(WORK_DIR + CONFIGS_DIR, name)
     return True
+
+def dir_remover(name: str) -> bool:
+    """
+    Удаляет директорию по указанному пути вместе со всеми вложенными файлами и поддиректориями.
+
+    :param name: Имя директории с конфигурациионым файлом, которую нужно удалить.
+    :return: True, если удаление прошло успешно, иначе False.
+    """
+    try:
+        shutil.rmtree(WORK_DIR+CONFIGS_DIR+name)
+        print(f"Директория успешно удалена: {WORK_DIR+CONFIGS_DIR+name}")
+        return True
+    except Exception as e:
+        print(f"Ошибка при удалении директории: {WORK_DIR+CONFIGS_DIR+name} {e}")
+        return False

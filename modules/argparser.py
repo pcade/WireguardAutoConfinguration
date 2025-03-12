@@ -34,7 +34,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         '--remove',
         type=str,
-        help='Параметр удаленимя конфигурации'
+        help='Параметр удаления конфигурации'
+    )
+
+    parser.add_argument(
+        '--removeconfig',
+        type=str,
+        help='Параметр удаления файлов конфигурации'
     )
 
     parser.add_argument(
