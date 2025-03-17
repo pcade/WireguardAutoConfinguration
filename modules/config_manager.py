@@ -149,18 +149,21 @@ def remove_ip_configuration(config_text: str, ip_address: str) -> str:
         # Удаляем текст от [Peer] до конца строки с AllowedIPs
         return config_text[:peer_index]
 
+import re
+import json
+
 def extract_from_config(config_file_path: str) -> str:
     """
     Извлекает все строки из указанного файла конфигурации, которые не содержат ключи,
-    и возвращает их в формате JSON с группировкой по блокам [Peer].
+    и возвращает их в формате JSON с группировкой по значению AllowedIPs.
     Гарантирует, что каждая группа начинается с [Peer].
 
     :param config_file_path: Путь к файлу конфигурации (str);
-    :return: JSON-строка, содержащая строки, сгруппированные по блокам [Peer] (str).
+    :return: JSON-строка, содержащая строки, сгруппированные по значению AllowedIPs (str).
     """
     result = {}
     current_group = None
-    group_counter = 1
+    allowed_ips = None
 
     try:
         with open(config_file_path, 'r') as config_file:
@@ -173,15 +176,22 @@ def extract_from_config(config_file_path: str) -> str:
 
                 # Если находим начало нового блока [Peer]
                 if line.startswith("[Peer]"):
-                    if current_group:
-                        group_counter += 1
-                    current_group = []  # Используем список для хранения строк
-                    current_group.append(line)  # Добавляем [Peer] первым элементом
-                    result[str(group_counter)] = current_group
+                    if current_group and allowed_ips:
+                        result[allowed_ips] = current_group
+                    current_group = [line]  # Начинаем новую группу с [Peer]
+                    allowed_ips = None  # Сбрасываем значение AllowedIPs для новой группы
+
+                # Если находим строку с AllowedIPs, сохраняем её значение
+                elif line.startswith("AllowedIPs"):
+                    allowed_ips = line.split("=")[1].strip()
 
                 # Добавляем строку в текущую группу, если она не содержит ключей
                 elif current_group is not None and not re.search(r'(Address|PrivateKey|PublicKey|ListenPort)\s*=', line):
                     current_group.append(line)
+
+            # Добавляем последнюю группу в результат, если она существует
+            if current_group and allowed_ips:
+                result[allowed_ips] = current_group
 
     except Exception as e:
         print(f"Произошла ошибка при извлечении строк: {e}")
