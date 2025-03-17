@@ -49,7 +49,7 @@ def create_str_wg_conf(ip_addr: str, public_key: str, name: str, date: str, comm
     replacements = {
         '# name:': name,
         '# date:': f"{TODAY} - {date}",
-        '# commnet:': comment,
+        '# comment:': comment,
         'PublicKey =': public_key,
         'AllowedIPs =': f"{ip_addr}/32"
     }
@@ -149,8 +149,8 @@ def remove_ip_configuration(config_text: str, ip_address: str) -> str:
         # Удаляем текст от [Peer] до конца строки с AllowedIPs
         return config_text[:peer_index]
 
-import re
 import json
+import re
 
 def extract_from_config(config_file_path: str) -> str:
     """
@@ -161,8 +161,8 @@ def extract_from_config(config_file_path: str) -> str:
     :param config_file_path: Путь к файлу конфигурации (str);
     :return: JSON-строка, содержащая строки, сгруппированные по значению AllowedIPs (str).
     """
-    result = {}
-    current_group = None
+    result = []
+    current_peer = None
     allowed_ips = None
 
     try:
@@ -176,25 +176,47 @@ def extract_from_config(config_file_path: str) -> str:
 
                 # Если находим начало нового блока [Peer]
                 if line.startswith("[Peer]"):
-                    if current_group and allowed_ips:
-                        result[allowed_ips] = current_group
-                    current_group = [line]  # Начинаем новую группу с [Peer]
+                    if current_peer and allowed_ips:
+                        result.append(current_peer)
+                    current_peer = {
+                        "ip_address": None,
+                        "peer_info": {
+                            "name": "No name",
+                            "date_range": {
+                                "start_date": "не указано",
+                                "end_date": "не указано"
+                            },
+                            "comment": ""
+                        }
+                    }
                     allowed_ips = None  # Сбрасываем значение AllowedIPs для новой группы
 
                 # Если находим строку с AllowedIPs, сохраняем её значение
                 elif line.startswith("AllowedIPs"):
                     allowed_ips = line.split("=")[1].strip()
+                    if current_peer:
+                        current_peer["ip_address"] = allowed_ips
 
-                # Добавляем строку в текущую группу, если она не содержит ключей
-                elif current_group is not None and not re.search(r'(Address|PrivateKey|PublicKey|ListenPort)\s*=', line):
-                    current_group.append(line)
+                # Если находим строку с комментарием, извлекаем информацию
+                elif line.startswith("#"):
+                    if current_peer:
+                        if "name:" in line:
+                            current_peer["peer_info"]["name"] = line.split("name:")[1].strip()
+                        elif "date:" in line:
+                            date_range = line.split("date:")[1].strip()
+                            if " - " in date_range:
+                                start_date, end_date = date_range.split(" - ")
+                                current_peer["peer_info"]["date_range"]["start_date"] = start_date.strip()
+                                current_peer["peer_info"]["date_range"]["end_date"] = end_date.strip()
+                        elif "comment:" in line:
+                            current_peer["peer_info"]["comment"] = line.split("comment:")[1].strip()
 
             # Добавляем последнюю группу в результат, если она существует
-            if current_group and allowed_ips:
-                result[allowed_ips] = current_group
+            if current_peer and allowed_ips:
+                result.append(current_peer)
 
     except Exception as e:
         print(f"Произошла ошибка при извлечении строк: {e}")
 
-    # Преобразуем словарь в JSON-строку
+    # Преобразуем список в JSON-строку
     return json.dumps(result, ensure_ascii=False, indent=4)

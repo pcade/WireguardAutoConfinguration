@@ -29,7 +29,7 @@ WG0 = 'wg0'
 FORM_WG0_CONF = '''\n\n[Peer]
 # name:
 # date:
-# commnet:
+# comment:
 PublicKey =
 AllowedIPs =
 '''
