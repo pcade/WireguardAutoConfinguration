@@ -1,6 +1,7 @@
 from utils.utils import *
 import re
 import json
+import subprocess
 
 def create_config(form_conf: str, replacements: dict) -> str:
     """
@@ -149,8 +150,6 @@ def remove_ip_configuration(config_text: str, ip_address: str) -> str:
         # Удаляем текст от [Peer] до конца строки с AllowedIPs
         return config_text[:peer_index]
 
-import json
-import re
 
 def extract_from_config(config_file_path: str) -> str:
     """
@@ -220,3 +219,79 @@ def extract_from_config(config_file_path: str) -> str:
 
     # Преобразуем список в JSON-строку
     return json.dumps(result, ensure_ascii=False, indent=4)
+
+def get_wg_peers_json(interface="wg0") -> str:
+    """
+    Получает информацию о пирах WireGuard и возвращает её в формате JSON.
+
+    :param interface: Имя интерфейса WireGuard (по умолчанию "wg0").
+    :return: JSON-строка с информацией о пирах.
+    """
+    # Запуск команды wg show <interface> и получение вывода
+    try:
+        output = subprocess.check_output(["wg", "show", interface]).decode("utf-8")
+    except subprocess.CalledProcessError as e:
+        return json.dumps({"error": f"Failed to execute command: {e}"}, indent=4)
+
+    # Регулярные выражения для извлечения данных
+    peer_pattern = re.compile(
+        r'peer: (.+?)\n\s+endpoint: (.+?)\n\s+allowed ips: (.+?)\n\s+latest handshake: (.+?)\n\s+transfer: (.+?) received, (.+?) sent'
+    )
+
+    # Поиск всех совпадений
+    peers = peer_pattern.findall(output)
+
+    # Формирование JSON
+    result = []
+    for peer in peers:
+        peer_info = {
+            "ip_address": peer[2],  # allowed ips
+            "peer_info": {
+                "latest handshake": peer[3],  # latest handshake
+                "transfer": {
+                    "received": peer[4],  # received data
+                    "sent": peer[5]  # sent data
+                }
+            }
+        }
+        result.append(peer_info)
+    
+    return json.dumps(result, ensure_ascii=False, indent=4)
+
+
+def combo_json(json_1, json_2) -> str:
+    """
+    Получает информацию о пирах WireGuard и возвращает её в формате JSON.
+
+    :json_1: Данные json получаемые в результате работы extract_from_config(config_file_path: str),
+    :json_2:  Данные json получаемые в результате работы get_wg_peers_json(interface="wg0"),
+    :return: JSON-строка с информацией о пирах.
+    """
+    # Запуск команды wg show <interface> и получение вывода
+
+    # Преобразуем JSON-строки в Python-словари
+    data1 = json.loads(json_1)
+    data2 = json.loads(json_2)
+
+    # Создаем словарь для объединенных данных
+    combined_data = {}
+
+    # Добавляем данные из первого JSON
+    for item in data1:
+        ip_address = item["ip_address"]
+        combined_data[ip_address] = item
+
+    # Добавляем данные из второго JSON, объединяя их с существующими
+    for item in data2:
+        ip_address = item["ip_address"]
+        if ip_address in combined_data:
+            # Если IP-адрес уже существует, обновляем информацию
+            combined_data[ip_address]["peer_info"].update(item["peer_info"])
+        else:
+            # Если IP-адрес не существует, добавляем новый элемент
+            combined_data[ip_address] = item
+
+    # Преобразуем объединенный словарь обратно в JSON-строку
+    combined_json = json.dumps(list(combined_data.values()), ensure_ascii=False, indent=4)
+
+    return json.dumps(combined_json, ensure_ascii=False, indent=4)

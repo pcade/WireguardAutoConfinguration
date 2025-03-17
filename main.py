@@ -31,7 +31,7 @@ def main():
         return sys.exit(0)
 
     if args.config:
-        ip_list= extract_from_config(f'{WORK_DIR}{WG0}{CONF}')
+        ip_list= combo_json(extract_from_config(f'{WORK_DIR}{WG0}{CONF}'), get_wg_peers_json("wg0"))
         return sys.stdout.write(ip_list)
 
     client_name = args.name if args.name else f"auto_{increment_ip(get_last_allowed_ip(f'{WORK_DIR}{WG0}{CONF}')).split('.')[-1]}"
