@@ -3,15 +3,13 @@ import json
 from utils.utils import *
 from modules.key_manager import *
 from modules.ip_manager import *
-from modules.key_manager import *
-from modules.ip_manager import *
 from modules.config_manager import *
 from modules.qr_generator import qr_main
-import modules.daemon_reload
 from modules.argparser import parse_args
 from modules.str_checker import *
 from modules.daemon_reload import reload_daemon
 import modules.fs_worker
+
 
 def main():
     if modules.fs_worker.pre_start_checks() == False:
@@ -57,6 +55,7 @@ def main():
         RETURN['conf'] = path_conf
         RETURN['qr'] = path_qr
         sys.stdout.write(json.dumps(RETURN))
+
 
 if __name__ == "__main__":
     main()
