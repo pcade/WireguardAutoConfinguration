@@ -1,5 +1,7 @@
 .env
 /env
+.venv
+.pytest_cache
 /test
 /wireguard
 __pycache__

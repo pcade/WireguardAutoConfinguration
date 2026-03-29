@@ -1,28 +1,89 @@
 from dotenv import load_dotenv
 import os
+from datetime import datetime
 
 load_dotenv()
 
 
 class Config:
-    VIRUS_TOTAL_API_Key = os.getenv("VIRUS_TOTAL_API_Key")
-    TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-    TELEGRAM_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+    NAME = 'WireguardAutoConfinguration'
+    VERSION = '1'
+
+    # Загружаем переменные окружения из файла .env
+    load_dotenv()
+
+    TODAY = datetime.now().strftime("%d.%m.%Y")
+
+    WORK_DIR = '/etc/wireguard/'
+    #WORK_DIR = "/home/gpahomov/Nextcloud/scripts/git/"
+    APP_DIR = "WireguardAutoConfinguration/"
+    CONFIGS_DIR = "configs/"
+    END_PRIVATE_KEY = '_private.key'
+    END_PUBLIC_KEY = '_public.key'
+    SUDO_TEE = 'sudo tee'
+    ECHO = 'echo'
+    WG_GENKEY = 'wg genkey'
+    WG_PUBKEY = 'wg pubkey'
+    SERVER = 'server'
+    CONF = '.conf'
+
+    WG0 = 'wg0'
+
+    FORM_WG0_CONF = '''\n\n[Peer]
+    # name:
+    # date:
+    # comment:
+    PublicKey =
+    AllowedIPs =
+    '''
+
+    FORM_CLI_CONF = f'''[Interface]
+    Address = 
+    DNS = {DNS}
+    PrivateKey = 
+
+    [Peer]
+    PublicKey = {PUBLICKEY}
+    AllowedIPs = {ALLOWEDIPS}
+    Endpoint = {ENDPOINT}
+    PersistentKeepalive = {PERSISTENTKEEPALIVE}\n
+    '''
+
+    RETURN = {'conf': '',
+              'qr' : ''}
+
+    PUBLICKEY = os.getenv('PUBLICKEY')
+    ENDPOINT = os.getenv('ENDPOINT')
+    DNS = os.getenv('DNS')
+    ALLOWEDIPS = os.getenv('ALLOWEDIPS')
+    PERSISTENTKEEPALIVE = os.getenv('PERSISTENTKEEPALIVE')
 
     @property
-    def virus_total_api_key(self) -> str:
-        if self.VIRUS_TOTAL_API_Key is None:
-            raise AttributeError("Переменная окружения VIRUS_TOTAL_API_Key не задана")
-        return self.VIRUS_TOTAL_API_Key
+    def publickey(self) -> str:
+        if self.PUBLICKEY is None:
+            raise AttributeError("Переменная окружения PUBLICKEY не задана")
+        return self.PUBLICKEY
 
     @property
-    def tg_token(self) -> str:
-        if self.TELEGRAM_TOKEN is None:
-            raise AttributeError("Переменная окружения TELEGRAM_TOKEN не задана")
-        return self.TELEGRAM_TOKEN
+    def endpoint(self) -> str:
+        if self.ENDPOINT is None:
+            raise AttributeError("Переменная окружения ENDPOINT не задана")
+        return self.ENDPOINT
 
     @property
-    def tg_chat_id(self) -> str:
-        if self.TELEGRAM_CHAT_ID is None:
-            raise AttributeError("Переменная окружения TELEGRAM_CHAT_ID не задана")
-        return self.TELEGRAM_CHAT_ID
+    def dns(self) -> str:
+        if self.DNS is None:
+            raise AttributeError("Переменная окружения DNS не задана")
+        return self.DNS
+
+    @property
+    def allowedips(self) -> str:
+        if self.ALLOWEDIPS is None:
+            raise AttributeError("Переменная окружения ALLOWEDIPS не задана")
+        return self.ALLOWEDIPS
+
+    @property
+    def pesistentkeepalive(self) -> str:
+        if self.PERSISTENTKEEPALIVE is None:
+            raise AttributeError("Переменная окружения PERSISTENTKEEPALIVE не задана")
+        return self.PERSISTENTKEEPALIVE

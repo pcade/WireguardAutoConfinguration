@@ -1,27 +1,46 @@
 import sys
 import json
+from argparser import ArgParser
+from config.config import Config
+from adapters.filesystem import FileSystemAdapter
+from services.config_service import ConfigService
 from utils.utils import *
 from modules.key_manager import *
 from modules.ip_manager import *
 from modules.config_manager import *
 from modules.qr_generator import qr_main
-from modules.argparser import parse_args
 from modules.str_checker import *
 from modules.daemon_reload import reload_daemon
 import modules.fs_worker
 
 
 def main():
-    args = parse_args()
+    fs = FileSystemAdapter(
+        work_dir=Config.WORK_DIR,
+        configs_dir=Config.CONFIGS_DIR,
+        wg0=Config.WG0,
+        conf_ext=Config.CONF
+    )
+
+    cs = ConfigService(
+        work_dir=Config.WORK_DIR,
+        configs_dir=Config.CONFIGS_DIR,
+        wg0=Config.WG0,
+        conf_ext=Config.CONF,
+        form_cli_conf=Config.FORM_CLI_CONF,
+        form_wg0_conf=Config.FORM_WG0_CONF,
+    )
+
+    args = ArgParser().parse()
 
     if args.version:
         return
 
-    if not modules.fs_worker.pre_start_checks():
+    if not fs.pre_start_checks():
         sys.exit(1)
 
     if args.remove:
-        remove_configuration_by_ip(args.remove)
+        cs.remove_configuration_by_ip(args.remove)
         return sys.exit(0)
 
     if args.daemonreload:
@@ -29,14 +48,14 @@ def main():
         return sys.exit(0)
 
     if args.removeconfig:
-        modules.fs_worker.dir_remover(args.removeconfig)
+        fs.dir_remover(args.removeconfig)
         return sys.exit(0)
 
     if args.config:
-        ip_list= combo_json(extract_from_config(f'{WORK_DIR}{WG0}{CONF}'), get_wg_peers_json("wg0"))
+        ip_list = cs.combo_json(extract_from_config(f'{Config.WORK_DIR}{Config.WG0}{Config.CONF}'), get_wg_peers_json("wg0"))
         return sys.stdout.write(ip_list)
 
-    client_name = args.name if args.name else f"auto_{increment_ip(get_last_allowed_ip(f'{WORK_DIR}{WG0}{CONF}')).split('.')[-1]}"
+    client_name = args.name if args.name else f"auto_{increment_ip(get_last_allowed_ip(f'{Config.WORK_DIR}{Config.WG0}{Config.CONF}')).split('.')[-1]}"
 
     modules.fs_worker.path_worker(client_name)
 
